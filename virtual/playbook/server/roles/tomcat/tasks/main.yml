@@ -1,0 +1,46 @@
+---
+- name: tomcat user exists check
+  shell: cat /etc/passwd | grep tomcat
+  ignore_errors: True
+  register: tomcat_user_result
+
+- name: tomcat user add
+  command: useradd -s /sbin/nologin tomcat
+  ignore_errors: True
+  when: tomcat_user_result|failed
+
+- name: tomcat exists check
+  command: ls {{ tomcat_dir }}
+  ignore_errors: True
+  register: tomcat_result
+
+- name: tomcat get source file
+  command: chdir={{ src_dir }} wget {{ tomcat_src_url }}
+  when: tomcat_result|failed
+
+- name: tomcat unarchive file
+  command: chdir={{ src_dir}} tar xf {{ tomcat_archive_file }}
+  when: tomcat_result|failed
+
+- name: tomcat move directory
+  command: mv {{ src_dir }}/{{ tomcat_unarchive_folder }} {{ tomcat_dir }}
+  when: tomcat_result|failed
+
+- name: tomcat directory chown change
+  command: chown -R tomcat /usr/local/tomcat
+  when: tomcat_result|failed
+
+- name: tomcat server conf copy
+  template: src=roles/tomcat/templates/server.xml dest={{ tomcat_dir }}/conf/server.xml group=root owner=tomcat mode=644
+  
+#- name: tomcat jsp copy
+#  template: src=roles/tomcat/templates/index_server1.jsp dest={{ tomcat_dir }}/webapps/ROOT/index.jsp group=root owner=tomcat mode=777
+#  when: inventory_hostname == 'localserver1'
+
+- name: tomcat jsp copy
+  template: src=roles/tomcat/templates/index.jsp dest={{ tomcat_dir }}/webapps/ROOT/index.jsp group=root owner=tomcat mode=777
+
+- name: tomcat start
+  command: sh {{ tomcat_dir }}/bin/startup.sh
+  async: 15
+  poll: 0

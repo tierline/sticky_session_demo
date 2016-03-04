@@ -1,0 +1,5 @@
+src_dir: /usr/local/src
+tomcat_dir: /usr/local/tomcat
+tomcat_src_url: http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.30/bin/apache-tomcat-8.0.30.tar.gz
+tomcat_archive_file: apache-tomcat-8.0.30.tar.gz
+tomcat_unarchive_folder: apache-tomcat-8.0.30
