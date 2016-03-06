@@ -1,0 +1,47 @@
+---
+- name: dynamo dir check exist
+  command: ls {{ dynamo_dir }}
+  ignore_errors: True
+  register: dynamo_dir_exist
+
+- name: download dynamo
+  command: chdir={{ src_dir }} wget {{ dynamo_url }}
+  when: dynamo_dir_exist|failed
+
+- name: dynamo archive archive unfreeze
+  command: chdir={{ src_dir }} tar xf {{ dynamo_archive_file }}
+  when: dynamo_dir_exist|failed
+
+- name: dynamo dir crete
+  command: mkdir {{ dynamo_dir }}
+  when: dynamo_dir_exist|failed
+
+- name: move dynamo jar
+  command: mv {{ src_dir }}/{{ dynamo_jar_file }} {{ dynamo_dir }}
+  when: dynamo_dir_exist|failed
+
+- name: copy dynamo lib
+  command: mv {{ src_dir }}/{{ dynamo_lib_dir }} {{ dynamo_dir }}
+  when: dynamo_dir_exist|failed
+
+- name: dynamo start
+  shell: java -Djava.library.path={{ dynamo_dir }}/{{ dynamo_lib_dir }} -jar {{ dynamo_dir }}/{{ dynamo_jar_file }} -sharedDb &
+  async: 5
+  poll: 0
+
+- name: aws dir exist check
+  command: ls ~/aws
+  ignore_errors: True
+  register: aws_dir_exist
+
+- name: aws dir create
+  command: mkdir ~/aws
+  when: aws_dir_exist|failed
+
+- name: copy aws config
+  template: src=roles/dynamo/templates/config dest=~/aws/config owner=root group=root mode=600
+  when: aws_dir_exist|failed
+
+- name: copy aws config
+  template: src=roles/dynamo/templates/credentials dest=~/aws/credentials owner=root group=root mode=600
+  when: aws_dir_exist|failed

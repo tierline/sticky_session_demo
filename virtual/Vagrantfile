@@ -19,6 +19,22 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  config.vm.define "dynamo" do |node|
+    node.vm.box = "centos66"
+    node.vm.network :private_network, ip: "192.168.33.13"
+
+    node.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+    end
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "./playbook/dynamo/play-book.yml"
+      ansible.inventory_path = "./playbook/dynamo/hosts"
+      ansible.limit = "all"
+      ansible.extra_vars = { "hostname" => "localserver" }
+    end
+  end
+  
   config.vm.define "server_1_env" do |node|
     node.vm.box = "centos66"
     node.vm.network :private_network, ip: "192.168.33.11"
@@ -48,15 +64,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.inventory_path = "./playbook/server/hosts"
       ansible.limit = "all"
       ansible.extra_vars = { "hostname" => "localserver2" }
-    end
-  end
-
-  config.vm.define "dynamo" do |node|
-    node.vm.box = "centos66"
-    node.vm.network :private_network, ip: "192.168.33.13"
-
-    node.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "512"]
     end
   end
 

@@ -2,18 +2,18 @@
 - name: epel install
   yum: name=epel-release state=present
 
-- name: expect install
-  yum: name=expect state=present
-
-- name: Git install
-  yum: name=git state=present
-
-- name: unzip install
-  yum: name=unzip state=present
-  
 - name: Java 1.8.0 install
   yum: name=java-1.8.0-openjdk state=present
 
+- name: python-tools install
+  yum: name=python-setuptools state=present
+
+- name: pip install
+  command: easy_install pip
+
+- name: awscli install
+  command: pip install awscli
+  
 - name: Check if selinux is installed
   command: getenforce
   ignore_errors: True

@@ -14,13 +14,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --%>
-<%@ page session="false" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%
 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy");
 request.setAttribute("year", sdf.format(new java.util.Date()));
 request.setAttribute("tomcatUrl", "http://tomcat.apache.org/");
 request.setAttribute("tomcatDocUrl", "/docs/");
 request.setAttribute("tomcatExamplesUrl", "/examples/");
+
+String strCnt = (String)session.getAttribute("cnt");
+
+if (strCnt == null) {
+   strCnt = "1";
+} else {
+    strCnt = Integer.toString(Integer.parseInt(strCnt) + 1);
+}
+
+session.setAttribute("cnt", strCnt);
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +54,7 @@ request.setAttribute("tomcatExamplesUrl", "/examples/");
                 <br class="separator" />
             </div>
             <div id="asf-box">
-                <h2>{{ inventory_hostname }}</h2>
+                <h2>{{ inventory_hostname }}::<%=strCnt%></h2>
                 <h1>${pageContext.servletContext.serverInfo}</h1>
             </div>
             <div id="upper" class="curved container">

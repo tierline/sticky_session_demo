@@ -3,3 +3,6 @@ tomcat_dir: /usr/local/tomcat
 tomcat_src_url: http://archive.apache.org/dist/tomcat/tomcat-8/v8.0.30/bin/apache-tomcat-8.0.30.tar.gz
 tomcat_archive_file: apache-tomcat-8.0.30.tar.gz
 tomcat_unarchive_folder: apache-tomcat-8.0.30
+dynamo_url: https://github.com/aws/aws-dynamodb-session-tomcat/releases/download/v2.0.1/aws-dynamodb-session-tomcat-2.0.1.jar.zip
+dynamo_archive_file: aws-dynamodb-session-tomcat-2.0.1.jar.zip
+dynamo_unarchive_file: aws-dynamodb-session-tomcat-2.0.1.jar

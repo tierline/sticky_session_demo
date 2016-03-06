@@ -33,14 +33,31 @@
 - name: tomcat server conf copy
   template: src=roles/tomcat/templates/server.xml dest={{ tomcat_dir }}/conf/server.xml group=root owner=tomcat mode=644
   
-#- name: tomcat jsp copy
-#  template: src=roles/tomcat/templates/index_server1.jsp dest={{ tomcat_dir }}/webapps/ROOT/index.jsp group=root owner=tomcat mode=777
-#  when: inventory_hostname == 'localserver1'
-
 - name: tomcat jsp copy
   template: src=roles/tomcat/templates/index.jsp dest={{ tomcat_dir }}/webapps/ROOT/index.jsp group=root owner=tomcat mode=777
+
+- name: tomcat context conf copy
+  template: src=roles/tomcat/templates/context.xml dest={{ tomcat_dir }}/conf/context.xml group=root owner=tomcat mode=644
+
+- name: dynamo session download
+  command: chdir={{ src_dir }} wget {{ dynamo_url }}
+
+- name: dynamo session archive resolve
+  command: chdir={{ src_dir }} unzip {{ dynamo_archive_file }}
+
+- name: move dynamo jar to tomcat lib
+  command: mv {{ src_dir }}/{{ dynamo_unarchive_file }} {{ tomcat_dir }}/lib/
+
+- name: chown change tomcat dir
+  command: chown -R tomcat:root {{ tomcat_dir }}
 
 - name: tomcat start
   command: sh {{ tomcat_dir }}/bin/startup.sh
   async: 15
   poll: 0
+
+- name: copy tomcat chkconfig file
+  template: src=roles/tomcat/templates/tomcat dest=/etc/init.d/tomcat group=root owner=root mode=755
+  
+- name: tomcat chkconfig on
+  command: chkconfig tomcat on

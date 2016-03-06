@@ -1,0 +1,6 @@
+src_dir: /usr/local/src
+dynamo_dir: /usr/local/dynamo
+dynamo_url: http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz
+dynamo_archive_file: dynamodb_local_latest.tar.gz
+dynamo_jar_file: DynamoDBLocal.jar
+dynamo_lib_dir: DynamoDBLocal_lib
