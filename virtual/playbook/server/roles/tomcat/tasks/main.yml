@@ -36,11 +36,11 @@
 #- name: tomcat jsp copy
 #  template: src=roles/tomcat/templates/index.jsp dest={{ tomcat_dir }}/webapps/ROOT/index.jsp group=root owner=tomcat mode=777
 
-#- name: remove webapps into files
-#  command: rm -rf {{ tomcat_dir }}/webapps
+- name: remove webapps into files
+  command: rm -rf {{ tomcat_dir }}/webapps
 
-#- name: mkdir webapps
-#  command: mkdir {{ tomcat_dir }}/webapps
+- name: mkdir webapps
+  command: mkdir {{ tomcat_dir }}/webapps
   
 - name: war copy
   copy: src=ROOT.war dest={{ tomcat_dir }}/webapps/ROOT.war
@@ -48,8 +48,8 @@
 - name: tomcat context conf copy
   template: src=roles/tomcat/templates/context.xml dest={{ tomcat_dir }}/conf/context.xml group=root owner=tomcat mode=644
 
-- name: tomat web conf copy
-  template: src=roles/tomcat/templates/web.xml dest={{ tomcat_dir }}/conf/web.xml group=root owner=tomcat mode=644
+- name: tomcat setenv sh copy
+  template: src=roles/tomcat/templates/setenv.sh dest={{ tomcat_dir }}/bin/setenv.sh group=root owner=tomcat mode=644
   
 - name: dynamo session download
   command: chdir={{ src_dir }} wget {{ dynamo_url }}
