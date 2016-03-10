@@ -1,1 +1,3 @@
 virtual/.vagrant
+virtual_redis/.vagrant
+virtual_memcached/.vagrant
