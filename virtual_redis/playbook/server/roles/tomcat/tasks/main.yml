@@ -1,0 +1,72 @@
+---
+- name: tomcat user exists check
+  shell: cat /etc/passwd | grep tomcat
+  ignore_errors: True
+  register: tomcat_user_result
+
+- name: tomcat user add
+  command: useradd -s /sbin/nologin tomcat
+  ignore_errors: True
+  when: tomcat_user_result|failed
+
+- name: tomcat exists check
+  command: ls {{ tomcat_dir }}
+  ignore_errors: True
+  register: tomcat_result
+
+- name: tomcat get source file
+  command: chdir={{ src_dir }} wget {{ tomcat_src_url }}
+  when: tomcat_result|failed
+
+- name: tomcat unarchive file
+  command: chdir={{ src_dir}} tar xf {{ tomcat_archive_file }}
+  when: tomcat_result|failed
+
+- name: tomcat move directory
+  command: mv {{ src_dir }}/{{ tomcat_unarchive_folder }} {{ tomcat_dir }}
+  when: tomcat_result|failed
+
+- name: tomcat directory chown change
+  command: chown -R tomcat /usr/local/tomcat
+  when: tomcat_result|failed
+
+- name: tomcat server conf copy
+  template: src=roles/tomcat/templates/server.xml dest={{ tomcat_dir }}/conf/server.xml group=root owner=tomcat mode=644
+
+- name: remove webapps into files
+  command: rm -rf {{ tomcat_dir }}/webapps
+
+- name: mkdir webapps
+  command: mkdir {{ tomcat_dir }}/webapps
+  
+- name: war copy
+  copy: src=ROOT.war dest={{ tomcat_dir }}/webapps/ROOT.war
+
+- name: tomcat context conf copy
+  template: src=roles/tomcat/templates/context.xml dest={{ tomcat_dir }}/conf/context.xml group=root owner=tomcat mode=644
+
+- name: tomcat setenv sh copy
+  template: src=roles/tomcat/templates/setenv.sh dest={{ tomcat_dir }}/bin/setenv.sh group=root owner=tomcat mode=644
+
+- name: copy tomcat redis session manager
+  copy: src=tomcat-redis-session-manager-2.0.0.jar dest={{ tomcat_dir }}/lib/tomcat-redis-session-manager-2.0.0.jar
+
+- name: jedis jar file download
+  command: chdir={{ tomcat_dir }}/lib wget {{ jedis_url }}
+
+- name: common pool jar file download
+  command: chdir={{ tomcat_dir }}/lib wget {{ common_pool_url }}
+  
+- name: chown change tomcat dir
+  command: chown -R tomcat:root {{ tomcat_dir }}
+
+- name: tomcat start
+  command: sh {{ tomcat_dir }}/bin/startup.sh
+  async: 15
+  poll: 0
+
+- name: copy tomcat chkconfig file
+  template: src=roles/tomcat/templates/tomcat dest=/etc/init.d/tomcat group=root owner=root mode=755
+
+- name: tomcat chkconfig on
+  command: chkconfig tomcat on

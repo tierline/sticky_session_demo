@@ -1,0 +1,70 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.define "elb_env" do |node|
+    node.vm.box = "centos66"
+    node.vm.network :private_network, ip: "192.168.33.10"
+
+    node.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+    end
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "./playbook/elb/play-book.yml"
+      ansible.inventory_path = "./playbook/elb/hosts"
+      ansible.limit = "all"
+    end
+  end
+
+  config.vm.define "memcached" do |node|
+    node.vm.box = "centos66"
+    node.vm.network :private_network, ip: "192.168.33.13"
+
+    node.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "512"]
+    end
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "./playbook/memcached/play-book.yml"
+      ansible.inventory_path = "./playbook/memcached/hosts"
+      ansible.limit = "all"
+      ansible.extra_vars = { "hostname" => "localserver" }
+    end
+  end
+  
+  config.vm.define "server_memcached_1_env" do |node|
+    node.vm.box = "centos66"
+    node.vm.network :private_network, ip: "192.168.33.11"
+
+    node.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+    end
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "./playbook/server/play-book.yml"
+      ansible.inventory_path = "./playbook/server/hosts"
+      ansible.limit = "all"
+      ansible.extra_vars = { "hostname" => "localserver1" }
+    end
+  end
+
+  config.vm.define "server_memcached_2_env" do |node|
+    node.vm.box = "centos66"
+    node.vm.network :private_network, ip: "192.168.33.12"
+
+    node.vm.provider "virtualbox" do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+    end
+
+    node.vm.provision :ansible do |ansible|
+      ansible.playbook = "./playbook/server/play-book.yml"
+      ansible.inventory_path = "./playbook/server/hosts"
+      ansible.limit = "all"
+      ansible.extra_vars = { "hostname" => "localserver2" }
+    end
+  end
+
+end

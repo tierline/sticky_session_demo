@@ -1,0 +1,7 @@
+---
+- name: playbook start
+  hosts: all
+  sudo: yes
+  roles:
+    - common
+    - memcached

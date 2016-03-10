@@ -1,0 +1,12 @@
+---
+- name: redis install
+  yum: name=redis state=present
+
+- name: redis conf copy
+  template: src=roles/redis/templates/redis.conf dest=/etc/redis.conf group=root owner=root mode=644
+  
+- name: redis start
+  command: service redis start
+  
+- name: chkconfig redis on
+  command: chkconfig redis on

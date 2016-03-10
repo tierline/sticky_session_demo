@@ -1,0 +1,9 @@
+---
+- name: memcached install
+  yum: name=memcached state=present
+  
+- name: memcached start
+  command: service memcached start
+  
+- name: chkconfig memcached on
+  command: chkconfig memcached on

@@ -1,0 +1,28 @@
+---
+- name: epel install
+  yum: name=epel-release state=present
+
+- name: expect install
+  yum: name=expect state=present
+
+- name: Git install
+  yum: name=git state=present
+
+- name: pcre install
+  yum: name={{ item }} state=latest
+  with_items:
+    - pcre
+    - pcre-devel
+    - zlib
+    - zlib-devel
+  
+- name: Check if selinux is installed
+  command: getenforce
+  ignore_errors: True
+  register: command_result
+
+- name: Install libselinux-python
+  yum: name={{ item }}
+  with_items:
+    - libselinux-python
+  when: command_result|success and command_result.stdout != 'Disabled'

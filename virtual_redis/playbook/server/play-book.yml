@@ -1,0 +1,6 @@
+- name: start playbook
+  hosts: '{{ hostname }}'
+  sudo: yes
+  roles:
+    - common
+    - tomcat

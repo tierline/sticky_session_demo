@@ -1,0 +1,9 @@
+src_dir: /usr/local/src
+tomcat_dir: /usr/local/tomcat
+tomcat_src_url: http://ftp.yz.yamagata-u.ac.jp/pub/network/apache/tomcat/tomcat-7/v7.0.68/bin/apache-tomcat-7.0.68.tar.gz
+tomcat_archive_file: apache-tomcat-7.0.68.tar.gz
+tomcat_unarchive_folder: apache-tomcat-7.0.68
+memcached_manager_url: https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/memcached-session-manager/memcached-session-manager-1.6.5.jar
+memcached_manager_tomcat_url: https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/memcached-session-manager/memcached-session-manager-tc7-1.6.5.jar
+memcached_spy_url: https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/spymemcached/spymemcached-2.10.3.jar
+memcached_couch_url: http://files.couchbase.com/maven2/couchbase/couchbase-client/1.1.4/couchbase-client-1.1.4.jar
