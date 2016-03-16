@@ -1,8 +1,8 @@
 src_dir: /usr/local/src
 tomcat_dir: /usr/local/tomcat
-tomcat_src_url: http://ftp.yz.yamagata-u.ac.jp/pub/network/apache/tomcat/tomcat-7/v7.0.68/bin/apache-tomcat-7.0.68.tar.gz
-tomcat_archive_file: apache-tomcat-7.0.68.tar.gz
-tomcat_unarchive_folder: apache-tomcat-7.0.68
+tomcat_src_url: http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.50/bin/apache-tomcat-7.0.50.tar.gz
+tomcat_archive_file: apache-tomcat-7.0.50.tar.gz
+tomcat_unarchive_folder: apache-tomcat-7.0.50
 redis_manager_url: https://github.com/jcoleman/tomcat-redis-session-manager.git
 redis_manager_dir: tomcat-redis-session-manager
 jedis_url: http://central.maven.org/maven2/redis/clients/jedis/2.5.2/jedis-2.5.2.jar
